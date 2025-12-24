@@ -27,6 +27,7 @@ A full-stack Learning Management System (LMS) designed to simplify online educat
 
 ---
 
+## Project Structure
 ```
 lms-app/
 ├─ backend/
