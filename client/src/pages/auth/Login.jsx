@@ -1,20 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-type": "application/json" },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const result = await response.json();
@@ -23,11 +24,16 @@ export const Login = () => {
       if (response.ok) {
         console.log("Login sucessful! Token: " + result.token);
         localStorage.setItem("token", result.token);
+        setUser(result.user);
       } else {
         console.log("Login failed: " + result.message);
       }
-
-      navigate("/dashboard");
+      const role = result.user?.role;
+      if (role === "teacher") {
+        navigate("/dashboard/teacher");
+      } else {
+        navigate("/dashboard/student");
+      }
     } catch (error) {
       console.error(error);
     }
@@ -38,16 +44,16 @@ export const Login = () => {
       <div className="w-full max-w-md border bg-white rounded-lg p-6">
         <h1 className="text-center font-bold text-5xl mb-6">Log In</h1>
         <form onSubmit={handleLogin} className="space-y-6 text-left">
-          <label className="text-sm font-medium text-left">Username</label>
-          <div className="">
+          <label className="text-sm font-medium text-left">Email</label>
+          <div>
             <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
-              type="text"
-              placeholder="JohnDoe123"
+              type="email"
+              placeholder="JohnDoe123@email.com"
               className="border border-black/30 rounded w-full p-2"
-            ></input>
+            />
           </div>
 
           <label className="text-sm font-medium">Password</label>
@@ -59,7 +65,7 @@ export const Login = () => {
               placeholder="Password"
               type="password"
               className="border border-black/30 rounded w-full p-2"
-            ></input>
+            />
           </div>
 
           <button className="border w-full py-4 rounded-xl bg-green-500 text-white font-semibold hover:bg-green-400 active:scale-105">
