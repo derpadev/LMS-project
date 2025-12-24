@@ -27,4 +27,21 @@ A full-stack Learning Management System (LMS) designed to simplify online educat
 
 ---
 
+```
+lms-app/
+├─ backend/
+│  ├─ models/         # Mongoose schemas
+│  ├─ routes/         # API routes
+│  ├─ controllers/    # Route controllers
+│  ├─ middleware/     # Auth & error handling
+│  └─ server.js       # Entry point
+├─ frontend/
+│  ├─ src/
+│  │  ├─ components/  # React components
+│  │  ├─ pages/       # App pages
+│  │  ├─ services/    # API calls
+│  │  └─ App.js
+└─ README.md
+
+```
 
